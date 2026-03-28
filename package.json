@@ -1,0 +1,21 @@
+{
+  "name": "MovieSearch-App",
+  "source": "src/index.html",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build --no-source-maps --dist-dir prod --public-url ./",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d prod"
+  },
+  "devDependencies": {
+    "buffer": "^6.0.3",
+    "gh-pages": "^6.3.0",
+    "parcel": "latest",
+    "sharp": "^0.31.3"
+  },
+  "dependencies": {
+    "firebase": "^12.11.0",
+    "uuid": "^9.0.1"
+  }
+}
