@@ -1,15 +1,14 @@
 export class Model {
   constructor({ onFilmsChange }) {
     this.fullFilmsArray = [];
-
     this.onFilmsChange = onFilmsChange;
   }
 
-  getFilms() {
+  pullFilms() {
     return this.fullFilmsArray;
   }
 
-  setFilms(fullFilmsArray) {
+  pushFilms(fullFilmsArray) {
      this.fullFilmsArray = fullFilmsArray;
      this.onFilmsChange();
   }

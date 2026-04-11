@@ -1,20 +1,37 @@
+import { doc } from "firebase/firestore";
 import { NOT_FOUND_FILM } from "./constants.js";
 
 export class View {
-  constructor({ onBtnSearchNode, onBtnDeleteNode, onBtnLoginNode }) {
+  constructor({
+    onBtnSearchNode,
+    onBtnDeleteNode,
+    onBtnLoginNode,
+    onBtnRegisterNode,
+    onBtnDeleteUserNode,
+    onBtnLogoutNode
+  }) {
     this.inputNode = document.querySelector(".js-search-input");
     this.btnSearchNode = document.querySelector(".js-search-btn");
     this.divNoMoviesNode = document.querySelector(".js-no-movies");
     this.divAllMoviesNode = document.querySelector(".js-movies");
-    this.btnLoginNode = document.querySelector(".js-auth-btn");
+    this.btnLoginNode = document.querySelector(".js-login-btn");
+    this.btnRegisterNode = document.querySelector(".js-register-btn");
+    this.btnDeleteUserNode = document.querySelector(".js-delete-user-btn");
+    this.btnLogoutNode = document.querySelector(".js-logout-btn");
     this.btnDeleteNode = document.querySelector(".js-delete-btn");
 
     this.onBtnSearchNode = onBtnSearchNode;
     this.onBtnDeleteNode = onBtnDeleteNode;
     this.onBtnLoginNode = onBtnLoginNode;
+    this.onBtnRegisterNode = onBtnRegisterNode;
+    this.onBtnDeleteUserNode = onBtnDeleteUserNode;
+    this.onBtnLogoutNode = onBtnLogoutNode;
 
     this.btnSearchNode.addEventListener("click", this._handleBtnSearchNode);
-    this.btnLoginNode.addEventListener("click", this._handleBtnLoginNode); 
+    this.btnLoginNode.addEventListener("click", this._handleBtnLoginNode);
+    this.btnRegisterNode.addEventListener("click", this._handleBtnRegisterNode);
+    this.btnDeleteUserNode.addEventListener("click", this._handleBtnDeleteUserNode);
+    this.btnLogoutNode.addEventListener("click", this._handleBtnLogoutNode); 
     this.btnDeleteNode.addEventListener("click", this._handleBtnDeleteNode);
 
     this.inputNode.addEventListener("keypress", (event) => {
@@ -42,7 +59,6 @@ export class View {
       const filmCard = document.createElement("a");
       filmCard.href = "#";
       filmCard.className = "film js-film";
-      //   filmCard.dataset.id = element.imdbID || "";
 
       const filmImageDiv = document.createElement("div");
       filmImageDiv.className = "film-image";
@@ -82,7 +98,6 @@ export class View {
 
   showNoSearchResult(message = NOT_FOUND_FILM) {
     this.divNoMoviesNode.textContent = message;
-    // this.divAllMoviesNode.innerHTML = "";
   }
 
   clearPastList(filmsContainer) {
@@ -100,5 +115,17 @@ export class View {
 
   _handleBtnLoginNode = () => {
     this.onBtnLoginNode();
+  };
+
+  _handleBtnLogoutNode = () => {
+    this.onBtnLogoutNode();
+  };
+
+   _handleBtnRegisterNode = () => {
+    this.onBtnRegisterNode();
+  };
+
+  _handleBtnDeleteUserNode = () => {
+    this.onBtnDeleteUserNode();
   };
 }

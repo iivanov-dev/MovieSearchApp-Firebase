@@ -12,14 +12,13 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-
 export class Storage {
   constructor(key) {
     this.key = key;
     this.db = db;
-    this.documentsId = []; 
+    this.documentsId = [];
   }
-  async pull() {
+  async pullFilmsFromStorage() {
     const querySnapshot = await getDocs(collection(this.db, this.key));
     const films = [];
 
@@ -37,32 +36,41 @@ export class Storage {
     return films;
   }
 
-  async push(films) {
-    const batch = writeBatch(this.db);
+  async pushFilmsToStorage(films) {
+    if (!films || !films.length) {
+      throw new Error("pushFilmsToStorage: массив фильмов пуст");
+    }
 
-    const film = films[0];
+    try {
+      const batch = writeBatch(this.db);
 
-    // films.forEach((film) => {
-      const idDocument = this._handleGenerateUUID();
-      const ref = doc(this.db, this.key, idDocument);
+      films.forEach((film) => {
+        const idDocument = this._handleGenerateUUID();
+        const ref = doc(this.db, this.key, idDocument);
 
-      const filmData = {
-        Poster: film.Poster,
-        Title: film.Title,
-        Type: film.Type,
-        Year: film.Year,
-        imdbID: film.imdbID,
-        createdAt: serverTimestamp(),
-      };
+        const filmData = {
+          Poster: film.Poster,
+          Title: film.Title,
+          Type: film.Type,
+          Year: film.Year,
+          imdbID: film.imdbID,
+          createdAt: serverTimestamp(),
+        };
 
-      batch.set(ref, filmData);
-
-    // });
-    await batch.commit();
-    console.log("Generated UUIDs:", this.documentsId); 
+        batch.set(ref, filmData);
+        console.log(
+          `Фильм "${filmData.Title}" успешно сохранен с ID:`,
+          idDocument,
+        );
+      });
+      await batch.commit();
+    } catch (error) {
+      console.error("Ошибка при записи в Firestore:", error);
+      throw error;
+    }
   }
 
-  async delete(films) {
+  async deleteFilms(films) {
     const batch = writeBatch(this.db);
 
     films.forEach((film) => {
@@ -71,19 +79,27 @@ export class Storage {
     });
 
     await batch.commit();
-    //this.documentsId = [];
   }
 
-  async update(film) {
-    const ref = doc(this.db, this.key, film.id);
-    await updateDoc(ref, {
-      done: film.done,
+  async pushUserToStorage(user) {
+    await setDoc(doc(db, "users", user.uid), {
+      email: user.email,
+      createdAt: new Date(),
+      role: "user",
     });
+    console.log("Create user in Firestore")
   }
+
+  // async updateFilm(film) {
+  //   const ref = doc(this.db, this.key, film.id);
+  //   await updateDoc(ref, {
+  //     done: film.done,
+  //   });
+  // }
 
   _handleGenerateUUID = () => {
     const idDocument = uuidv4();
     this.documentsId.push(idDocument);
     return idDocument;
-  }
+  };
 }

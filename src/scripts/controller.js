@@ -4,6 +4,9 @@ import { Model } from "./model.js";
 import { Storage } from "./storage.js";
 import { MOVIES_STORAGE_KEY } from "./constants";
 
+import { auth } from "./firebase.js";
+import { Signin } from "../components/auth/signin.js";
+
 export class Controller {
   constructor() {
     this.model = new Model({
@@ -11,14 +14,21 @@ export class Controller {
     });
 
     this.view = new View({
-      onBtnSearchNode: this.handleViewBtnClickNode,
+      onBtnSearchNode: this.handleViewBtnSeacrh,
       onBtnDeleteNode: this.handleViewDeleteMovies,
-      onBtnLoginNode: this.handleLoginUser,
+      onBtnLoginNode: this.handleViewLoginUser,
+      onBtnRegisterNode: this.handleViewRegisterUser,
+      onBtnDeleteUserNode: this.handleViewDeleteUser,
+      onBtnLogoutNode: this.handleViewLogoutUser,
     });
 
     this.api = new API();
 
     this.storage = new Storage(MOVIES_STORAGE_KEY);
+
+    this.auth = auth;
+
+    this.signin = new Signin();
   }
 
   init() {
@@ -26,52 +36,98 @@ export class Controller {
   }
 
   handleModelFilmsChange = () => {
-    this.view.renderFilms(this.model.getFilms());
+    this.view.renderFilms(this.model.pullFilms());
   };
 
   handleViewDeleteMovies = () => {
-    this.storage.pull().then((data) => {
-      console.log(data);
-      this.storage.delete(data);
-      console.log("Deleted");
+    this.storage.pullFilmsFromStorage().then((data) => {
+      console.log("Deleted Films", data);
+
+      this.storage.deleteFilms(data);
     });
   };
 
-  handleLoginUser = () => {
-    console.log("Login");
+  handleViewLoginUser = async () => {
+    if (this.auth.currentUser) {
+      console.log("User already logged in");
+      return;
+    }
+    try {
+      const user = await this.signin.login(
+        this.auth,
+        "newuser@example.com",
+        "NewPass123!",
+      );
+      console.log("Login successful!");
+      console.log("User UID:", user.uid);
+      console.log("User Email:", user.email);
+      console.log("Last sign-in:", user.metadata?.lastSignInTime);
+      console.log(this.auth.currentUser);
+    } catch (error) {
+      console.error("Login failed:", error.message);
+    }
   };
 
-  handleViewBtnClickNode = (TitleFilms) => {
-    // const cache = {};
-    // cache[""] = {
-    //   expires: Date.now() + 1000 * 15,
-    //   data: [],
-    // };
+  handleViewRegisterUser = async () => {
+    console.log("handleRegisterUser from controller begin!");
+    try {
+      // Пока хардкод, позже возьмём из формы
+      const user = await this.signin.register(
+        this.auth,
+        "newuser@example.com",
+        "NewPass123!",
+      );
+      console.log("Registration successful!");
+      console.log("UID:", user.uid);
+      console.log("Email:", user.email);
 
+      this.storage.pushUserToStorage(user);
+
+      // Обновить UI
+      //this.view.updateAuthUI?.(user, true);
+    } catch (error) {
+      console.error("Registration failed:", error.code, error.message);
+    }
+  };
+
+  handleViewDeleteUser = async () => {
+    const currentUser = this.auth.currentUser;
+    await this.signin.delete(currentUser);
+  };
+
+  handleViewLogoutUser = async () => {
+    if (!this.auth.currentUser) {
+      console.log("User already logged out");
+      return;
+    }
+    try {
+      await this.signin.logout(this.auth);
+      console.log("Logout successful!");
+    } catch (error) {
+      console.error("Logout failed:", error.message);
+    }
+  };
+
+  handleViewBtnSeacrh = (TitleFilms) => {
     const inputValue = TitleFilms;
     if (inputValue === "") {
       this.view.showNoSearchResult("Please enter the movie title!");
       return;
     }
 
-    // if (
-    //   cache[inputValue] &&
-    //   cache[inputValue].data.length > 0 &&
-    //   cache[inputValue].expires > Date.now()
-    // ) {
-    //   this.view.renderFilms(cache[inputValue].data);
-    //   return;
-    // }
-
-    this.storage.pull().then((data) => {
-      console.log(data);
-    });
-
-    this.api.getFilms(inputValue).then((data) => {
+    this.api.pullFilms(inputValue).then((data) => {
       const fullFilmsArray = data.Search;
-      this.model.setFilms(fullFilmsArray);
-      this.storage.push(fullFilmsArray);
-      //   console.log(data);
+
+      this.model.pushFilms(fullFilmsArray);
+      this.storage.pushFilmsToStorage(fullFilmsArray);
     });
+
+    // this.storage.pullFilmsFromStorage().then((data) => {
+    //     console.log(data);
+    // })
+
+    // this.storage.pushFilmsToStorage().then((data) => {
+    //   console.log(data);
+    // });
   };
 }
