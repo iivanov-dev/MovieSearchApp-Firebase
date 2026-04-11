@@ -513,3 +513,36 @@ footer p {
     padding: 1.2rem 1.6rem;
   }
 }
+
+.auth-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 1rem 0;
+}
+
+.js-auth-page-btn {
+  background: var(--input-border);
+}
+
+.js-auth-page-btn:hover {
+  background: var(--btn-bg-hover);
+}
+
+.auth-status {
+  font-size: 1.3rem;
+  color: var(--text-muted);
+  padding: 0.8rem 1.5rem;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  min-width: 180px;
+  text-align: center;
+}
+
+.auth-status.authorized {
+  color: var(--btn-bg);
+  border-color: var(--btn-bg);
+}

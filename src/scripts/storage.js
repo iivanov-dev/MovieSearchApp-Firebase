@@ -7,6 +7,7 @@ import {
   getDocs,
   updateDoc,
   writeBatch,
+  deleteDoc,
   doc,
   serverTimestamp,
   query,
@@ -88,6 +89,17 @@ export class Storage {
       role: "user",
     });
     console.log("Create user in Firestore")
+  }
+
+    async deleteUserFromStorage(uid) {
+    try {
+      await deleteDoc(doc(this.db, "users", uid));
+      console.log("User deleted from Firestore:", uid);
+      return true;
+    } catch (error) {
+      console.error("Error deleting user from Firestore:", error.code, error.message);
+      throw error;
+    }
   }
 
   // async updateFilm(film) {

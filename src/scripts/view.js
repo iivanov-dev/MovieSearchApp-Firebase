@@ -4,24 +4,29 @@ import { NOT_FOUND_FILM } from "./constants.js";
 export class View {
   constructor({
     onBtnSearchNode,
-    onBtnDeleteNode,
+    onBtnDeleteFilmsNode,
     onBtnLoginNode,
     onBtnRegisterNode,
     onBtnDeleteUserNode,
     onBtnLogoutNode
   }) {
+        //    <a href="auth.html" class="js-auth-page-btn search-btn">Sign in</a>
+        // <span class="auth-status js-auth-status">Not authorized</span>
     this.inputNode = document.querySelector(".js-search-input");
     this.btnSearchNode = document.querySelector(".js-search-btn");
     this.divNoMoviesNode = document.querySelector(".js-no-movies");
     this.divAllMoviesNode = document.querySelector(".js-movies");
+    
     this.btnLoginNode = document.querySelector(".js-login-btn");
     this.btnRegisterNode = document.querySelector(".js-register-btn");
     this.btnDeleteUserNode = document.querySelector(".js-delete-user-btn");
     this.btnLogoutNode = document.querySelector(".js-logout-btn");
-    this.btnDeleteNode = document.querySelector(".js-delete-btn");
+    this.btnDeleteFilmsNode = document.querySelector(".js-delete-films-btn");
+    this.btnAuthPagerNode = document.querySelector(".js-auth-page-btn");
+    this.authStatusNode = document.querySelector(".js-auth-status");
 
     this.onBtnSearchNode = onBtnSearchNode;
-    this.onBtnDeleteNode = onBtnDeleteNode;
+    this.onBtnDeleteFilmsNode = onBtnDeleteFilmsNode;
     this.onBtnLoginNode = onBtnLoginNode;
     this.onBtnRegisterNode = onBtnRegisterNode;
     this.onBtnDeleteUserNode = onBtnDeleteUserNode;
@@ -32,7 +37,7 @@ export class View {
     this.btnRegisterNode.addEventListener("click", this._handleBtnRegisterNode);
     this.btnDeleteUserNode.addEventListener("click", this._handleBtnDeleteUserNode);
     this.btnLogoutNode.addEventListener("click", this._handleBtnLogoutNode); 
-    this.btnDeleteNode.addEventListener("click", this._handleBtnDeleteNode);
+    this.btnDeleteFilmsNode.addEventListener("click", this._handleBtnDeleteFilmsNode);
 
     this.inputNode.addEventListener("keypress", (event) => {
       if (event.key === "Enter") {
@@ -104,13 +109,39 @@ export class View {
     filmsContainer.innerHTML = "";
   }
 
+  updateAuthUI(user, isLoggedIn) {
+    if (isLoggedIn && user) {
+      this.btnLoginNode.style.display = 'none';
+      this.btnRegisterNode.style.display = 'none';
+      this.btnLogoutNode.style.display = 'inline-block';
+      this.btnDeleteUserNode.style.display = 'inline-block';
+    } else {
+      this.btnLoginNode.style.display = 'inline-block';
+      this.btnRegisterNode.style.display = 'inline-block';
+      this.btnLogoutNode.style.display = 'none';
+      this.btnDeleteUserNode.style.display = 'none';
+    }
+    
+    this.updateAuthStatus(user, isLoggedIn);
+  }
+
+  updateAuthStatus(user, isLoggedIn) {
+    if (isLoggedIn && user && this.authStatusNode) {
+      this.authStatusNode.textContent = `Authorized: ${user.email}`;
+      this.authStatusNode.classList.add("authorized");
+    } else if (this.authStatusNode) {
+      this.authStatusNode.textContent = "Not authorized";
+      this.authStatusNode.classList.remove("authorized");
+    }
+  }
+
   _handleBtnSearchNode = () => {
     const TitleFilms = this.inputNode.value.trim();
     this.onBtnSearchNode(TitleFilms);
   };
 
-  _handleBtnDeleteNode = () => {
-    this.onBtnDeleteNode();
+  _handleBtnDeleteFilmsNode = () => {
+    this.onBtnDeleteFilmsNode();
   };
 
   _handleBtnLoginNode = () => {

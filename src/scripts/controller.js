@@ -15,7 +15,7 @@ export class Controller {
 
     this.view = new View({
       onBtnSearchNode: this.handleViewBtnSearch,
-      onBtnDeleteNode: this.handleViewDeleteMovies,
+      onBtnDeleteFilmsNode: this.handleViewDeleteFilms,
       onBtnLoginNode: this.handleViewLoginUser,
       onBtnRegisterNode: this.handleViewRegisterUser,
       onBtnDeleteUserNode: this.handleViewDeleteUser,
@@ -35,10 +35,10 @@ export class Controller {
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
         console.log("init: User already logged in:", user.email);
-        //this.view.updateAuthUI(user, true);
+        this.view.updateAuthUI(user, true);
       } else {
         console.log("init: User logged out");
-        //this.view.updateAuthUI(null, false);
+        this.view.updateAuthUI(null, false);
       }
     });
   }
@@ -47,7 +47,7 @@ export class Controller {
     this.view.renderFilms(this.model.pullFilms());
   };
 
-  handleViewDeleteMovies = () => {
+  handleViewDeleteFilms = () => {
     this.storage.pullFilmsFromStorage().then((data) => {
       console.log("Deleted Films", data);
 
@@ -71,8 +71,11 @@ export class Controller {
       console.log("User Email:", user.email);
       console.log("Last sign-in:", user.metadata?.lastSignInTime);
       console.log(this.auth.currentUser);
+
+      this.view.updateAuthUI?.(user, true);
     } catch (error) {
       console.error("Login failed:", error.message);
+      this.view.updateAuthUI?.(null, false);
     }
   };
 
@@ -100,7 +103,20 @@ export class Controller {
 
   handleViewDeleteUser = async () => {
     const currentUser = this.auth.currentUser;
-    await this.signin.delete(currentUser);
+    if (!currentUser) {
+      console.log("No user to delete");
+      return;
+    }
+    try {
+      await this.storage.deleteUserFromStorage(currentUser.uid);
+      await this.signin.delete(currentUser);
+
+      console.log("User fully deleted");
+      //this.view.updateAuthUI?.(null, false);
+    } catch (error) {
+      console.error("Delete failed:", error.code, error.message);
+      //this.view.showError?.("Delete failed: " + error.message);
+    }
   };
 
   handleViewLogoutUser = async () => {
