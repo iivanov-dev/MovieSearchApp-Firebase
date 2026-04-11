@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles/reset.css" />
+    <link rel="stylesheet" href="./styles/reset.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,48 +13,34 @@
     />
 
     <link rel="stylesheet" href="./styles/index.css" />
-    <title>Movie Serch App</title>
+    <title>Movie Search App</title>
   </head>
   <body>
     <header class="header">
       <div class="container">
         <h1>Movie Search App</h1>
-          <button class="js-login-btn search-btn">
-            Login
-          </button>
-          <button class="js-register-btn search-btn">
-            Register
-          </button>
-          <button class="js-delete-user-btn search-btn">
-            Delete User
-        </button>
-          <button class="js-logout-btn search-btn">
-            Logout
-          </button>
+        <button class="js-login-btn search-btn">Login</button>
+        <button class="js-register-btn search-btn">Register</button>
+        <button class="js-delete-user-btn search-btn">Delete User</button>
+        <button class="js-logout-btn search-btn">Logout</button>
       </div>
     </header>
 
     <main class="main">
       <div class="container">
         <section class="movies-section">
-
           <div class="search-section">
             <input
-                class="js-search-input search-input"
-                type="text"
-                placeholder="Movie name"
+              class="js-search-input search-input"
+              type="text"
+              placeholder="Movie name"
             />
-            <button class="js-search-btn search-btn">
-              Search
-            </button>
-            <button class="js-delete-btn search-btn">
-              Delete
-            </button>
+            <button class="js-search-btn search-btn">Search</button>
+            <button class="js-delete-btn search-btn">Delete</button>
           </div>
 
           <div class="js-no-movies no-movies"></div>
           <div class="js-movies movies"></div>
-
         </section>
       </div>
     </main>

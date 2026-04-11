@@ -9,17 +9,14 @@ export class Signin {
   constructor() {}
 
   async login(auth, email, password) {
-    try {
-      const userProfile = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      return userProfile.user;
-    } catch (error) {
-      console.error("Error:", error.code, error.message);
-    }
+  try {
+    const userProfile = await signInWithEmailAndPassword(auth, email, password);
+    return userProfile.user;
+  } catch (error) {
+    console.error("Login error:", error.code, error.message);
+    throw error;
   }
+}
 
   async logout(auth) {
     console.log("logout ...");

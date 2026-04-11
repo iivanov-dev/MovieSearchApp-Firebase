@@ -6,7 +6,7 @@ import { MOVIES_STORAGE_KEY } from "./constants";
 
 import { auth } from "./firebase.js";
 import { Signin } from "../components/auth/signin.js";
-
+import { onAuthStateChanged } from "firebase/auth";
 export class Controller {
   constructor() {
     this.model = new Model({
@@ -14,7 +14,7 @@ export class Controller {
     });
 
     this.view = new View({
-      onBtnSearchNode: this.handleViewBtnSeacrh,
+      onBtnSearchNode: this.handleViewBtnSearch,
       onBtnDeleteNode: this.handleViewDeleteMovies,
       onBtnLoginNode: this.handleViewLoginUser,
       onBtnRegisterNode: this.handleViewRegisterUser,
@@ -32,7 +32,15 @@ export class Controller {
   }
 
   init() {
-    // this.storage.delete();
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        console.log("init: User already logged in:", user.email);
+        //this.view.updateAuthUI(user, true);
+      } else {
+        console.log("init: User logged out");
+        //this.view.updateAuthUI(null, false);
+      }
+    });
   }
 
   handleModelFilmsChange = () => {
@@ -108,7 +116,7 @@ export class Controller {
     }
   };
 
-  handleViewBtnSeacrh = (TitleFilms) => {
+  handleViewBtnSearch = (TitleFilms) => {
     const inputValue = TitleFilms;
     if (inputValue === "") {
       this.view.showNoSearchResult("Please enter the movie title!");
