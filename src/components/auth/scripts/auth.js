@@ -1,4 +1,6 @@
-import { auth } from "../../scripts/firebase.js";
+console.log("auth.js read");
+
+import { auth } from "../../../scripts/firebase.js";
 import { Signin } from "./signin.js";
 
 class AuthForm {
