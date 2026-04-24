@@ -1,6 +1,5 @@
 {
   "name": "MovieSearch-App",
-  "source": "src/index.html",
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "start": "parcel src/index.html src/components/auth/auth.html",

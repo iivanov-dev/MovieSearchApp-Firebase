@@ -1,5 +1,3 @@
-console.log("auth.js read");
-
 import { auth } from "../../../scripts/firebase.js";
 import { Signin } from "./signin.js";
 
@@ -32,10 +30,8 @@ class AuthForm {
 
     if (mode === "register") {
       this.setRegisterMode();
-        console.log("register read");
     } else {
       this.setLoginMode();
-        console.log("login read");
     }
 
     this.toggleLinkNode.addEventListener("click", (e) => {
@@ -59,6 +55,8 @@ class AuthForm {
     this.confirmPasswordInputNode.style.display = "none";
     this.confirmPasswordInputNode.required = false;
     history.replaceState({}, "", window.location.pathname);
+
+    console.log("login read");
   }
 
   setRegisterMode() {
@@ -71,6 +69,8 @@ class AuthForm {
     this.confirmPasswordInputNode.style.display = "block";
     this.confirmPasswordInputNode.required = true;
     history.replaceState({}, "", window.location.pathname + "?mode=register");
+
+    console.log("register read");
   }
 
   toggleMode() {
