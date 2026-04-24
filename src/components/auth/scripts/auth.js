@@ -69,7 +69,7 @@ class AuthForm {
     this.confirmPasswordInputNode.style.display = "block";
     this.confirmPasswordInputNode.required = true;
     history.replaceState({}, "", window.location.pathname + "?mode=register");
-
+    
     console.log("register read");
   }
 
