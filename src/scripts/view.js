@@ -8,15 +8,15 @@ export class View {
     onBtnLoginNode,
     onBtnRegisterNode,
     onBtnDeleteUserNode,
-    onBtnLogoutNode
+    onBtnLogoutNode,
   }) {
-        //    <a href="auth.html" class="js-auth-page-btn search-btn">Sign in</a>
-        // <span class="auth-status js-auth-status">Not authorized</span>
+    //    <a href="auth.html" class="js-auth-page-btn search-btn">Sign in</a>
+    // <span class="auth-status js-auth-status">Not authorized</span>
     this.inputNode = document.querySelector(".js-search-input");
     this.btnSearchNode = document.querySelector(".js-search-btn");
     this.divNoMoviesNode = document.querySelector(".js-no-movies");
     this.divAllMoviesNode = document.querySelector(".js-movies");
-    
+
     this.btnLoginNode = document.querySelector(".js-login-btn");
     this.btnRegisterNode = document.querySelector(".js-register-btn");
     this.btnDeleteUserNode = document.querySelector(".js-delete-user-btn");
@@ -35,9 +35,15 @@ export class View {
     this.btnSearchNode.addEventListener("click", this._handleBtnSearchNode);
     this.btnLoginNode.addEventListener("click", this._handleBtnLoginNode);
     this.btnRegisterNode.addEventListener("click", this._handleBtnRegisterNode);
-    this.btnDeleteUserNode.addEventListener("click", this._handleBtnDeleteUserNode);
-    this.btnLogoutNode.addEventListener("click", this._handleBtnLogoutNode); 
-    this.btnDeleteFilmsNode.addEventListener("click", this._handleBtnDeleteFilmsNode);
+    this.btnDeleteUserNode.addEventListener(
+      "click",
+      this._handleBtnDeleteUserNode,
+    );
+    this.btnLogoutNode.addEventListener("click", this._handleBtnLogoutNode);
+    this.btnDeleteFilmsNode.addEventListener(
+      "click",
+      this._handleBtnDeleteFilmsNode,
+    );
 
     this.inputNode.addEventListener("keypress", (event) => {
       if (event.key === "Enter") {
@@ -111,17 +117,17 @@ export class View {
 
   updateAuthUI(user, isLoggedIn) {
     if (isLoggedIn && user) {
-      this.btnLoginNode.style.display = 'none';
-      this.btnRegisterNode.style.display = 'none';
-      this.btnLogoutNode.style.display = 'inline-block';
-      this.btnDeleteUserNode.style.display = 'inline-block';
+      this.btnLoginNode.hidden = true;
+      this.btnRegisterNode.hidden = true;
+      this.btnLogoutNode.hidden = false;
+      this.btnDeleteUserNode.hidden = false;
     } else {
-      this.btnLoginNode.style.display = 'inline-block';
-      this.btnRegisterNode.style.display = 'inline-block';
-      this.btnLogoutNode.style.display = 'none';
-      this.btnDeleteUserNode.style.display = 'none';
+      this.btnLoginNode.hidden = false;
+      this.btnRegisterNode.hidden = false;
+      this.btnLogoutNode.hidden = true;
+      this.btnDeleteUserNode.hidden = true;
     }
-    
+
     this.updateAuthStatus(user, isLoggedIn);
   }
 
@@ -152,7 +158,7 @@ export class View {
     this.onBtnLogoutNode();
   };
 
-   _handleBtnRegisterNode = () => {
+  _handleBtnRegisterNode = () => {
     this.onBtnRegisterNode();
   };
 
